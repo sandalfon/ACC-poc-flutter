@@ -1,36 +1,33 @@
-import 'point_info.dart';
 
 class RealDataCar{
-  int? carIndex;
-  List<PointInfo>  pointInfos = [];
+  int carIndex;
+  double worldPosX;
+  double worldPosY;
+  int lap;
+  int lapTimeMS;
 
   RealDataCar(
     this.carIndex,
-    this.pointInfos
+    this.worldPosX,
+    this.worldPosY,
+    this.lap,
+    this.lapTimeMS
   );
 
 
-  static List<RealDataCar> fetchAll() {
-    return [
-      RealDataCar(
-        1,
-        [
-          PointInfo(1,1,1,1),
-          PointInfo(2,2,2,1),
-          PointInfo(4,4,1,2),
-          PointInfo(3,3,2,2)
-        ]
-      ),
+  factory RealDataCar.fromJson(Map<String, dynamic> json) => RealDataCar(
+    json["CarIndex"],
+    json["WorldPosX"],
+    json["WorldPosY"],
+    json["Laps"],
+    json["CurrentLap"]["LaptimeMS"]);
 
-      RealDataCar(
-        2,
-        [
-          PointInfo(-1,-1,1,1),
-          PointInfo(-2,-2,2,1),
-          PointInfo(-4,-4,1,2),
-          PointInfo(-3,-3,2,2)
-        ]
-      )
-    ];
+    @override
+  String toString() {
+    // TODO: implement toString
+    return "{car: "+carIndex.toString()+", x: "+worldPosX.toString()+", y: "+worldPosY.toString()+", lap: "+lap.toString()+", time: "+lapTimeMS.toString()+"}";
   }
+
+  double get posX {return worldPosX;}
+  double get posY {return worldPosX;}
 }
