@@ -1,11 +1,23 @@
 
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'models/real_data_car_list.dart' as rdcl;
+import 'package:quiver/iterables.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(_ChartApp());
 }
 
+
+class _ChartApp extends StatelessWidget {
+   @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const _MyHomePage(),
+    );
+  }
+}
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -17,17 +29,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: const _MyHomePage(),
     );
   }
 }
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class _MyHomePage extends StatefulWidget {
+  const _MyHomePage({Key? key}) : super(key: key);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<_MyHomePage> {
 
 
      @override
@@ -41,30 +53,41 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (context, data){
           //fromJsonFile('./data/b-realtime-car.json'),
           
-          return  Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ...formatSections(data.data)
-          ]);
+          return  Center(
+                child: SfCartesianChart(
+                  primaryXAxis:  NumericAxis(
+                            // X axis is hidden now
+                            isVisible: true
+                        ),
+                  primaryYAxis:  NumericAxis(
+                            // X axis is hidden now
+                            isVisible: true
+                        ),
+                        series: <ScatterSeries<rdcl.DataPairing,double>>[
+                          ScatterSeries<rdcl.DataPairing, double>(
+                            dataSource: formatSections( data.data, false),
+                            xValueMapper: (rdcl.DataPairing data, _) => data.x,
+                            yValueMapper: (rdcl.DataPairing data, _) => data.y
+
+                          )
+                        ]
+                )
+          );
         }));
 
  
   }
 }
 
-List<Widget> formatSections(realDataList){
-        debugPrint('*******************************');
-        List<Widget>  list  = [];
-        for (List<double> x in realDataList.getXY()){
-          debugPrint(x.toString());
-          list.add(Text(x.toString()));
-        }
-      
-      return list;
-    //return [Text(realDataList.getXY().toString())];
-    //return realDataList.getXY().map( (x) => Text(x.toString())).toList();
-    //return realDataList.map((realData)=> Text(realData.toString())).toList() as List<Widget>;
-
-
+List<rdcl.DataPairing> formatSections(realDataList, verbose){
+  realDataList ??=  rdcl.RealDataCarList() ;
+  debugPrint('*******************************');   
+  debugPrint(realDataList.toString()); 
+   List<rdcl.DataPairing> dataPairing  = realDataList.getXY() ?? [];
+  if(verbose){
+  for (rdcl.DataPairing pair in dataPairing){
+        debugPrint('**'+pair.x.toString( )+', '+pair.y.toString()); 
+    }
+  }
+  return dataPairing;
 }

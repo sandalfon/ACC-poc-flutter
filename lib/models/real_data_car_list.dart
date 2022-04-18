@@ -2,9 +2,14 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' as root_bundle;
-import 'package:quiver/iterables.dart';
 import 'real_data_car.dart' as rdc;
 
+
+class DataPairing {
+  double x;
+  double y;
+  DataPairing(this.x, this.y);
+}
 
 class RealDataCarList<RealDataCar> extends ListBase<rdc.RealDataCar>  {
    final List<rdc.RealDataCar> _list = [] ;
@@ -38,14 +43,12 @@ class RealDataCarList<RealDataCar> extends ListBase<rdc.RealDataCar>  {
     return posYList ;
   }
 
-  Iterable<List<double>> getXY() {
-    List<double > posXList = [];
-    List<double > posYList = [];
+  List<DataPairing> getXY() {
+    List<DataPairing> posXYList = [];
     for (rdc.RealDataCar realDataCar in _list) {
-      posXList.add(realDataCar.posX);
-      posYList.add(realDataCar.posY);
+      posXYList.add(DataPairing( realDataCar.posX, realDataCar.posY));
     }
-    return zip([posXList, posYList]) ;
+    return posXYList ;
   }
 
 

@@ -29,5 +29,5 @@ class RealDataCar{
   }
 
   double get posX {return worldPosX;}
-  double get posY {return worldPosX;}
+  double get posY {return worldPosY;}
 }
